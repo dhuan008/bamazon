@@ -13,7 +13,7 @@ CREATE TABLE products (
     PRIMARY KEY(item_id)
 );
 
-INSERT INTO products (product_name, department_name, price, stock_quanity)
+INSERT INTO products (product_name, department_name, price, stock_quantity)
 VALUES ('Google Chromecast 3rd gen', 'Electronics', 25, 500), 
 ('Google Home Mini', 'Electronics', 25, 2500),
 ('Chromecast Ultra', 'Electronics', 54, 50),
