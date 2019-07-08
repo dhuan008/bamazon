@@ -18,7 +18,7 @@ class CustomerOrder {
         });
         // Connect to the database
         this._connection.connect(err => {
-            if(err) throw err;
+            if (err) throw err;
             console.log(`connected as id: ${this._connection.threadId}\n`)
         });
     }
