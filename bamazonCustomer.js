@@ -43,10 +43,20 @@ class CustomerOrder {
 
 
 
-const newOrder = new CustomerOrder();
-console.log(newOrder.connection.config.host);
-newOrder.displayProducts();
-newOrder.disconnect(); // need promise to delay this until after display completes
+// const newOrder = new CustomerOrder();
+// console.log(newOrder.connection.config.host);
+// newOrder.displayProducts();
+// newOrder.disconnect(); // need promise to delay this until after display completes
+
+
+const main = async () => {
+    const newOrder = new CustomerOrder();
+    await newOrder.displayProducts();
+    newOrder.disconnect();
+}
+
+main();
+
 
 // newOrder.connection.connect(err => {
 //     if(err) throw err;
