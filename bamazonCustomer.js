@@ -87,6 +87,7 @@ class CustomerOrder {
                             'ID': res[i].item_id,
                             'Item': res[i].product_name,
                             'Price': `$${res[i].price.toFixed(2)}`
+                            //'Quantity': res[i].stock_quantity
                         }
                     )
                     this._amount[i] = res[i].stock_quantity;
@@ -126,33 +127,50 @@ class CustomerOrder {
                     type: 'number',
                     message: 'Please enter quanity to buy: ',
                     validate: value => {
-                        if (value > 0 && value <= this._amount[idResponse.id]) {
+                        if (value > 0 && value <= this._amount[idResponse.id - 1]) {
                             return true;
                         }
                         else {
-                            return `Please choose a number between 0 and ${this._amount[idResponse.id]}`;
+                            return `Please choose a number between 0 and ${this._amount[idResponse.id - 1]}`;
                         }
                     },
                     name: 'quantity'
                 }
             ]).then(amountResponse => {
                 console.log(amountResponse.quantity);
-                this.checkOrder(idResponse.id-1, amountResponse.quantity);
+                this.processOrder(idResponse.id, amountResponse.quantity);
             });
         });
     }
 
     /**
-     * @desc Check order
+     * @desc Process order
      * @param {*} id 
      * @param {*} amount 
      */
-    checkOrder(id, amount) {
+    processOrder(id, amount) {
         // console.log(id);
         // console.log(this._amount[id]);
-        if(this._amount[id] >= amount) {
-            console.log('ok');
-        }
+        // if(this._amount[id] >= amount) {
+        //     console.log('ok');
+        // }
+        // else {
+        //     console.log();
+        // }
+        return new Promise((resolve, reject) => {
+            this._connection.query('UPDATE products SET ? WHERE ?',
+                [
+                    {
+                        stock_quantity: this._amount[id - 1] - amount
+                    },
+                    {
+                        item_id: id
+                    }
+                ], (err, results) => {
+                    if (err) reject(err);
+                    resolve(results);
+                });
+        });
     }
 
     /**
