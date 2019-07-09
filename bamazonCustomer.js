@@ -4,7 +4,9 @@ const mysql = require('mysql');
 const inquirer = require('inquirer');
 const {Table} = require('console-table-printer');
 
-// Customer Order class
+/**
+ * Customer Order Class
+ */
 class CustomerOrder {
     constructor(host = process.env.DB_HOST, port = process.env.DB_PORT, user = process.env.DB_USER, password = process.env.DB_PASS, database = process.env.DB) {
         // Database connection variable
@@ -22,22 +24,31 @@ class CustomerOrder {
         });
     }
 
+    /** 
+     * @desc Getter for connection
+     */
     get connection() {
         return this._connection; //.config; //.host;
     }
 
+    /**
+     * @desc Displays items from database ordered by id, item, price
+     */
     displayProducts() {
         this._connection.query('SELECT item_id, product_name, price FROM products', (err, res) => {
             if (err) throw err;
-            //console.log(res);
+            
+            // Creates new table object to hold data to display
             const productTable = new Table({
                 style: 'fatborder',
                 columns: [
                     {name: 'ID', alignment: 'right'},
                     {name: 'Item', alignment: 'left'},
-                    {name: 'Price', alignment: 'left'}
+                    {name: 'Price', alignment: 'right'}
                 ]
             });
+
+            // Loops through results and adds relevant data to table for display
             for(let i = 0; i < res.length; i++) {
                 productTable.addRow(
                     {
@@ -47,11 +58,15 @@ class CustomerOrder {
                     }
                 )
             }
-            //console.log(productTable);
+
+            // Logs table to console
             productTable.printTable(productTable);
         });
     }
 
+    /**
+     * @desc Ends connection
+     */
     disconnect() {
         this._connection.end();
         console.log('\nThanks for Shopping with BAMazon!\n');
