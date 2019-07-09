@@ -2,12 +2,11 @@
 require('dotenv').config();
 const mysql = require('mysql');
 const inquirer = require('inquirer');
+const {Table} = require('console-table-printer');
 
 // Customer Order class
 class CustomerOrder {
     constructor(host = process.env.DB_HOST, port = process.env.DB_PORT, user = process.env.DB_USER, password = process.env.DB_PASS, database = process.env.DB) {
-        // Product array
-        this._products = [];
         // Database connection variable
         this._connection = mysql.createConnection({
             host: host,
@@ -31,18 +30,25 @@ class CustomerOrder {
         this._connection.query('SELECT item_id, product_name, price FROM products', (err, res) => {
             if (err) throw err;
             //console.log(res);
-
-            const table = [];
+            const productTable = new Table({
+                style: 'fatborder',
+                columns: [
+                    {name: 'ID', alignment: 'right'},
+                    {name: 'Item', alignment: 'left'},
+                    {name: 'Price', alignment: 'left'}
+                ]
+            });
             for(let i = 0; i < res.length; i++) {
-                table.push(
+                productTable.addRow(
                     {
                         'ID': res[i].item_id,
-                        'Product': res[i].product_name,
-                        'Price': `$${res[i].price}`
+                        'Item': res[i].product_name,
+                        'Price': `$${res[i].price.toFixed(2)}`
                     }
                 )
             }
-            console.log(table);
+            //console.log(productTable);
+            productTable.printTable(productTable);
         });
     }
 
