@@ -4,6 +4,9 @@ const mysql = require('mysql');
 const inquirer = require('inquirer');
 const { Table } = require('console-table-printer');
 
+// Global Variable
+let isShopping = true;
+
 /**
  * Customer Order Class
  */
@@ -13,6 +16,8 @@ class CustomerOrder {
         this._numItems = 0;
         // Array of quanities
         this._amount = [];
+        // Used to determine if the user should keep shopping
+        this._isShopping = true;
         // Table to store products to print from database
         this._productTable;
         // Database connection variable
@@ -35,6 +40,13 @@ class CustomerOrder {
      */
     get connection() {
         return this._connection; //.config; //.host;
+    }
+
+    /**
+     * @desc Getter for boolean isShopping
+     */
+    get isShopping() {
+        return this._isShopping;
     }
 
     /**
@@ -156,6 +168,25 @@ class CustomerOrder {
     }
 
     /**
+     * Asks the user if they wish to keep shopping
+     */
+    keepShopping() {
+        return inquirer.prompt([
+            {
+                type: 'list',
+                message: 'Would you like to continue shopping?',
+                choices: ['Yes', 'No'],
+                name: 'choice'
+            }
+        ]).then(response => {
+            if (response.choice != 'Yes') {
+                return this._isShopping = false;
+            }
+            return true;
+        })
+    };
+
+    /**
      * @desc Ends connection
      */
     disconnect() {
@@ -174,13 +205,18 @@ const main = async () => {
     // Creates a new order
     const newOrder = new CustomerOrder();
 
+    // Continues shopping until user exits
     do {
         // Display items
         await newOrder.displayProducts();
 
         // Ask user for item to buy and amount
         await newOrder.promptUser();
-    } while ();
+
+        // Ask the user if they want to keep shopping
+        await newOrder.keepShopping();
+
+    } while (newOrder.isShopping);
 
 
     // console.log('awe', newOrder.numItems);
