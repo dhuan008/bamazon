@@ -4,20 +4,6 @@ const mysql = require('mysql');
 const inquirer = require('inquirer');
 const { Table } = require('console-table-printer');
 
-// // Global Functions
-// /**
-//  * @desc
-//  * @param {*} promise 
-//  * @author Jason Kaiser(creator?), Jesse Warden(blog)
-//  * @website http://jessewarden.com/2017/11/easier-error-handling-using-asyncawait.html
-//  */
-// const sureThing = promise => {
-//     promise
-//     .then(data => ({ok: true, data}))
-//     .catch(error => Promise.resolve({ok: false, error}));
-// };
-
-
 /**
  * Customer Order Class
  */
@@ -90,6 +76,7 @@ class CustomerOrder {
                             //'Quantity': res[i].stock_quantity
                         }
                     )
+                    // Array with quanity for each item
                     this._amount[i] = res[i].stock_quantity;
                 }
 
@@ -111,7 +98,7 @@ class CustomerOrder {
                 type: 'number',
                 message: 'Please enter the ID of the item you wish to buy: ',
                 validate: value => {
-                    if (value > 0 && value <= this._numItems) { // needs to check for zero quanity else if 
+                    if (value > 0 && value <= this._numItems) {
                         return true;
                     }
                     else {
@@ -121,7 +108,10 @@ class CustomerOrder {
                 name: 'id'
             }
         ]).then(idResponse => {
-            console.log(idResponse.id);
+            // Check if items remaining
+            if (this._amount[idResponse.id - 1] <= 0) {
+                return console.log('Sorry, out of stock');
+            }
             return inquirer.prompt([
                 {
                     type: 'number',
@@ -149,14 +139,6 @@ class CustomerOrder {
      * @param {*} amount 
      */
     processOrder(id, amount) {
-        // console.log(id);
-        // console.log(this._amount[id]);
-        // if(this._amount[id] >= amount) {
-        //     console.log('ok');
-        // }
-        // else {
-        //     console.log();
-        // }
         return new Promise((resolve, reject) => {
             this._connection.query('UPDATE products SET ? WHERE ?',
                 [
@@ -184,13 +166,6 @@ class CustomerOrder {
 }
 
 
-
-// const newOrder = new CustomerOrder();
-// console.log(newOrder.connection.config.host);
-// newOrder.displayProducts();
-// newOrder.disconnect(); // need promise to delay this until after display completes
-
-
 /**
  * Main
  */
@@ -199,10 +174,14 @@ const main = async () => {
     // Creates a new order
     const newOrder = new CustomerOrder();
 
+    do {
+        // Display items
+        await newOrder.displayProducts();
 
-    await newOrder.displayProducts();
+        // Ask user for item to buy and amount
+        await newOrder.promptUser();
+    } while ();
 
-    await newOrder.promptUser();
 
     // console.log('awe', newOrder.numItems);
     newOrder.disconnect();
