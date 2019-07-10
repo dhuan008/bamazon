@@ -31,7 +31,7 @@ class CustomerOrder {
         // Connect to the database
         this._connection.connect(err => {
             if (err) throw err;
-            console.log(`connected as id: ${this._connection.threadId}\n`)
+            console.log(`connected as id: ${this._connection.threadId}\n`);
         });
     }
 
@@ -124,6 +124,7 @@ class CustomerOrder {
             if (this._amount[idResponse.id - 1] <= 0) {
                 return console.log('Sorry, out of stock');
             }
+            
             return inquirer.prompt([
                 {
                     type: 'number',
@@ -161,8 +162,7 @@ class CustomerOrder {
                         item_id: id
                     }
                 ], (err, results) => {
-                    if (err) reject(err);
-                    resolve(results);
+                    err ? reject(err) : resolve(results); 
                 });
         });
     }
@@ -179,10 +179,7 @@ class CustomerOrder {
                 name: 'choice'
             }
         ]).then(response => {
-            if (response.choice != 'Yes') {
-                return this._isShopping = false;
-            }
-            return true;
+            response.choice === 'Yes' ? true : this._isShopping= false;
         })
     };
 
