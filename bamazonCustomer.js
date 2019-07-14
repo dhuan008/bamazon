@@ -92,8 +92,8 @@ class CustomerOrder {
                     this._amount[i] = res[i].stock_quantity;
                 }
 
-                console.log(this._amount);
-                //console.log(this._productTable.table.rows[0].text);
+                console.log(`Array of Quanities: ${this._amount}`);
+                console.log(this._productTable.table.rows[0].text.Price);
 
                 // Logs table to console
                 resolve(this._productTable.printTable());
@@ -102,7 +102,8 @@ class CustomerOrder {
     }
 
     /**
-     * @desc Asks user
+     * @desc Asks user which item to buy and how many
+     * Also does error checking if item exists or item is non zero
      */
     promptUser() {
         return inquirer.prompt([
@@ -140,16 +141,18 @@ class CustomerOrder {
                     name: 'quantity'
                 }
             ]).then(amountResponse => {
-                console.log(amountResponse.quantity);
+                // Calcuates total cost
+                console.log(`Your total cost is ${amountResponse.quantity * (this._productTable.table.rows[idResponse.id - 1].text.Price).substring(1)}`);
+                // Process order
                 this.processOrder(idResponse.id, amountResponse.quantity);
             });
         });
     }
 
     /**
-     * @desc Process order
-     * @param {*} id 
-     * @param {*} amount 
+     * @desc Modifies database to reflect order
+     * @param {*} id - id of the product to change
+     * @param {*} amount - number of items to change by
      */
     processOrder(id, amount) {
         return new Promise((resolve, reject) => {
