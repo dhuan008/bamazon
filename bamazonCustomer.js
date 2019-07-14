@@ -92,8 +92,7 @@ class CustomerOrder {
                     this._amount[i] = res[i].stock_quantity;
                 }
 
-                console.log(`Array of Quanities: ${this._amount}`);
-                console.log(this._productTable.table.rows[0].text.Price);
+                //console.log(`Array of Quanities: ${this._amount}`);
 
                 // Logs table to console
                 resolve(this._productTable.printTable());
@@ -142,7 +141,7 @@ class CustomerOrder {
                 }
             ]).then(amountResponse => {
                 // Calcuates total cost
-                console.log(`Your total cost is ${amountResponse.quantity * (this._productTable.table.rows[idResponse.id - 1].text.Price).substring(1)}`);
+                console.log(`Your total cost is $${amountResponse.quantity * (this._productTable.table.rows[idResponse.id - 1].text.Price).substring(1)}`);
                 // Process order
                 this.processOrder(idResponse.id, amountResponse.quantity);
             });
