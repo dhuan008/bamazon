@@ -26,4 +26,8 @@ node bamazonCustomer.js
 
 ### Demo: 
 
-![Demo](https://github.com/dhuan008/liri-node-app/blob/master/img/liri-demo.gif)
+![Demo1](https://github.com/dhuan008/bamazon/blob/master/demo/1Order.gif)
+
+![Demo2](https://github.com/dhuan008/bamazon/blob/master/demo/2QuantityCheck.gif)
+
+![Demo3](https://github.com/dhuan008/bamazon/blob/master/demo/3ProductCheck.gif)
