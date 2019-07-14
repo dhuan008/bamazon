@@ -33,14 +33,14 @@ node bamazonCustomer.js
 
 A console log showing current stock is shown in this demo. It is removed in the actual application. Below are common use cases
 
+- Demonstrating how to make a standard order
 ![Demo1](https://github.com/dhuan008/bamazon/blob/master/demo/1Order.gif)
-- Demonatrating how to make a standard order
 
+- Checking quantity of item selected
 ![Demo2](https://github.com/dhuan008/bamazon/blob/master/demo/2QuantityCheck.gif)
-- Checking Quantity of item selected
 
-![Demo3](https://github.com/dhuan008/bamazon/blob/master/demo/3ProductCheck.gif)
 - Checking if item selected is available
+![Demo3](https://github.com/dhuan008/bamazon/blob/master/demo/3ProductCheck.gif)
 
 
 ## Technologies Used
